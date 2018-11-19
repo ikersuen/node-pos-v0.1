@@ -1,42 +1,32 @@
-module.exports = function printInventory(inputs) {
-
+module.exports = function main(inputs) {
+var expectText = '***<store earning no money>Receipt ***\n';
 var array_new = [];
-var neverExist = true;
-var output_string = '';
+var count = 0;
+var total = 0;
 
-for(var i = 0; i < inputs.length; i++){
-    for (var j = 0; j < array_new.length; j++){
-        if (array_new[j].Barcode == inputs[i]) {
-            array_new[i].count += 1;
-            neverExist = false;
-        }else{
-            neverExist = true
+inputs.forEach(function (n){
+        if (array_new.includes(n.Name)){
         }
-    }
-    if(neverExist){
-        output.push({barcode:inputs[i].Barcode, name:inputs[i].Name, unit:inputs[i].Unit, price:inputs[i].Price, count:1});
-    }
-}
+        else{
+            array_new.push(n.Name);
+            inputs.forEach(function (j) {
+                if (j.Name == n.Name){
+                    count += 1;
+                }
+            });
+            if (n.Unit != 'a')
+                expectText += 'Name: ' + n.Name + ', Quantity: ' + count + ' ' + n.Unit + 's, Unit price: ' + n.Price.toFixed(2) + ' (yuan), Subtotal: ' + ((n.Price)*count).toFixed(2) + ' (yuan)\n';
+            else
+                expectText += 'Name: ' + n.Name + ', Quantity: ' + count + ', Unit price: ' + n.Price.toFixed(2) + ' (yuan), Subtotal: ' + ((n.Price)*count).toFixed(2) + ' (yuan)\n';
+            total += (n.Price)*count;
+            count = 0;
+            }
+    });
 
-function caclSum(array) {
-    var sum = 0;
-    for (var i = 0; i < array.length; i++) {
-        sum += (array[i].price);
-    }
-    return sum;
-};
+    expectText += '----------------------\n' +
+        'Total: ' + total.toFixed(2) + ' (yuan)\n' +
+        '**********************\n'
+        console.log(expectText);
 
-for(var k = 0; k < array_new; k++) {
-    output_string += 'Name: '+ array_new[k].name +', Quantity: 5 bottles, Unit price: ' + array_new[k].price +' (yuan), Subtotal: ' + array_new[k].price * array_new[k].sum +'(yuan)\n'
-}
-
-
-return
-    '***<store earning no money>Receipt ***\n' +
-    output_string +
-    '----------------------\n' +
-    'Total: '+ caclSum(array_new) +' (yuan)\n' +
-    '**********************\n';
-
-
+return expectText;
 };
